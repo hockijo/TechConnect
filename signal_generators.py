@@ -31,30 +31,7 @@ class DG1000(VISAInstrument):
         self.write_lines(lines)
 
     def setupSine(self, frequency, amplitude_pp, offset=0, phase=0, channel=1):
-        """ write_lines = (f":SOURCE{channel}:FUNC SIN",
-                        f":SOURCE{channel}:FREQ {float(frequency)}",
-                        f":SOURCE{channel}:VOLT {float(amplitude_pp)}",
-                        f":SOURCE{channel}:VOLT:OFFSET {float(offset)}",
-                        f":SOURCE{channel}:PHASE {float(phase)}",
-                        ) """
-        if channel == 1:
-            lines = (f"FUNC SIN",
-                    f"FREQ {float(frequency)}",
-                    f"VOLT {float(amplitude_pp)}",
-                    f"VOLT:OFFSET {float(offset)}",
-                    f"PHASE {float(phase)}",
-                )
-            
-        elif channel == 2:
-            lines = (f"FUNC:CH{channel} SIN",
-                        f"FREQ:CH{channel} {float(frequency)}",
-                        f"VOLT:CH{channel} {float(amplitude_pp)}",
-                        f"VOLT:CH{channel}:OFFSET {float(offset)}",
-                        f"PHASE:CH{channel} {float(phase)}",
-                    )
-
-        self.write_lines(lines)
-        _ = self.query_apply(channel)
+        self.setupFunc("SIN", frequency, amplitude_pp, offset, phase, channel=channel)
 
     def setupFunc(self, func: str, frequency, amplitude_pp, offset=0, phase=0, channel=1):
         if channel == 1:
