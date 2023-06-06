@@ -7,8 +7,8 @@ class VISAInstrument():
         self.rm = pyvisa.ResourceManager()
 
     def connect(self, address):
-        self.sig_gen = self.rm.open_resource(address, open_timeout=2, read_termination='\n')
-        self.sig_gen.query_delay = 1
+        self.instrument = self.rm.open_resource(address, open_timeout=2, read_termination='\n')
+        self.instrument.query_delay = 1
         print(f"Successfully connected to signal generator with address {address}")
 
     def list_connections(self, verbose=False):
@@ -19,20 +19,26 @@ class VISAInstrument():
 
     def write_SCPI(self, command: str):
         print(command)
-        self.sig_gen.write(command)
+        self.instrument.write(command)
+        error = self.check_errors()
 
     def query_SCPI(self, query: str):
-        return self.sig_gen.query(query)
-    
+        query = self.instrument.query(query)
+        error = self.check_errors()
+        return query
+
     def write_lines(self, lines):
         for line in lines:
             self.write_SCPI(line)
             time.sleep(0.1)
 
     def close_device(self):
-        self.sig_gen.close()
-        self.sig_gen.clear()
+        self.instrument.clear()
+        self.instrument.close()
 
-    def check_errors():
+    def check_errors(self):
         #TODO: implement return error handling
-        pass
+        error = self.query_SCPI(":SYSTEM:ERROR?")
+        if error != "0, No error":
+            print(f"Error Returned: {error}")
+        return error
