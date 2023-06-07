@@ -27,7 +27,7 @@ class VISAInstrument():
         #error = self.check_errors()
 
     def query_SCPI(self, query: str):
-        query = self.instrument.ask(query)
+        query = self.instrument.query(query)
         #error = self.check_errors()
         return query
 
