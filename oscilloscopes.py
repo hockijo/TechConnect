@@ -3,6 +3,7 @@ import pickle as pkl
 import os
 import time
 from VISA_instrument import VISAInstrument
+import utils
 
 ################################################################
 #Peices salvaged from InfiniiVision_SegmentedMemory_Waveform.py#
@@ -10,8 +11,8 @@ from VISA_instrument import VISAInstrument
 
 class Keysight3000T(VISAInstrument):
     def __init__(self):
-        self.instrument.query_delay = 0.05
-        super().__init__
+        super().__init__()
+        self.query_delay = 0.05
 
     def segmented_initialization(self, channel):
         lines = (
@@ -158,18 +159,13 @@ class Keysight3000T(VISAInstrument):
 
         return x_data, y_data, time_tags, channel_info
     
-    def data_acquistion(self, acquistion_time, channels, segment_number=1000, save_directory=None):
+    def data_acquistion(self, acquistion_time, channels, segment_number=1000, save_directory=None, acquisition_type='HRESOLUTION'):
         self.auto_setup()
-        time.sleep(2)
-        # segment_number = self.calculate_segment_number(acquistion_time)
         self.setup_time_window(acquistion_time, segment_number)
         self.setup_triggering()
-        time.sleep(2)
         for channel in channels:
             self.segmented_initialization(channel)
-        time.sleep(2)
-        self.segmented_acquistion_setup(segment_number, acquistion_type='HRESOLUTION')
-        time.sleep(2)
+        self.segmented_acquistion_setup(segment_number, acquistion_type=acquisition_type)
 
         self.digitize_acquisition(channels)
         time.sleep(2+acquistion_time)
@@ -186,17 +182,15 @@ class Keysight3000T(VISAInstrument):
             channel_info.update({channel: channel_channel_info})
 
         if save_directory is not None:
-            time_string = time.strftime(r"%d-%m-%Y-%H-%M-%S", time.localtime())
+            filename = f'{time.strftime(r"%d-%m-%Y-%H-%M-%S", time.localtime())}_data_collection'
             save_dict = {
                             'x_data': x_data,
                             'y_data': y_data,
                             'time_tags': time_tags,
                             'channel_info': channel_info
                         }
-            if not os.path.exists(save_directory):
-                os.makedirs(save_directory)
-            with open(f"{save_directory}//{time_string}_data_collection.pkl", 'wb') as f:
-                pkl.dump(save_dict, f)
+            instance_variables = None
+            utils.save_to_pkl(save_dict, metadata=instance_variables, directory=save_directory, filename=filename)
 
         return x_data, y_data, time_tags, channel_info
 
