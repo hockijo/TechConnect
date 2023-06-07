@@ -165,7 +165,7 @@ class Keysight3000T(VISAInstrument):
         for channel in channels:
             self.segmented_initialization(channel)
         time.sleep(2)
-        self.segmented_acquistion_setup(segment_number)
+        self.segmented_acquistion_setup(segment_number, acquistion_type='HRESOLUTION')
         time.sleep(2)
 
         self.digitize_acquisition(channels)
@@ -183,16 +183,17 @@ class Keysight3000T(VISAInstrument):
             channel_info.update({channel: channel_channel_info})
 
         if save_directory is not None:
-            time_string = time.strftime(r"%d-%m-%Y-%H:%M:%S", time.localtime())
-            if not os.path.exists(save_directory):
-                os.makedirs(save_directory)
-            with open(f"{save_directory}//{time_string}_data_collection.pkl", 'w') as f:
-                pkl.dump(f, {
+            time_string = time.strftime(r"%d-%m-%Y-%H-%M-%S", time.localtime())
+            save_dict = {
                             'x_data': x_data,
                             'y_data': y_data,
                             'time_tags': time_tags,
                             'channel_info': channel_info
-                        })
+                        }
+            if not os.path.exists(save_directory):
+                os.makedirs(save_directory)
+            with open(f"{save_directory}//{time_string}_data_collection.pkl", 'wb') as f:
+                pkl.dump(save_dict, f)
 
         return x_data, y_data, time_tags, channel_info
 
