@@ -1,7 +1,4 @@
 import numpy as np 
-import pyvisa
-import os
-import time
 from VISA_instrument import VISAInstrument, PrologixInstrument
 
 

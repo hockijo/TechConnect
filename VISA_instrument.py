@@ -1,7 +1,6 @@
 import numpy as np 
 import pyvisa
 import time
-import decorator
 from adapters import PrologixAdapter
 
 

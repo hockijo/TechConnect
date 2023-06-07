@@ -1,6 +1,5 @@
 import numpy as np 
 import pickle as pkl
-import pyvisa
 import os
 import time
 from VISA_instrument import VISAInstrument
