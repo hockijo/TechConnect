@@ -1,2 +1,5 @@
 #ignore the pychache folder
 __pycache__
+
+#ignore pickled data files
+**.pkl
