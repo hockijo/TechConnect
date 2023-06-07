@@ -8,7 +8,7 @@ class VISAInstrument():
 
     def connect(self, address):
         self.instrument = self.rm.open_resource(address, open_timeout=2, read_termination='\n')
-        self.instrument.query_delay = 1
+        self.instrument.query_delay = 0.05
         print(f"Successfully connected to signal generator with address {address}")
 
     def list_connections(self, verbose=False):
@@ -16,15 +16,16 @@ class VISAInstrument():
             print(self.rm.list_resources_info())
         else:
             print(self.rm.list_resources())
+        return self.rm.list_resources()
 
     def write_SCPI(self, command: str):
         print(command)
         self.instrument.write(command)
-        error = self.check_errors()
+        #error = self.check_errors()
 
     def query_SCPI(self, query: str):
         query = self.instrument.query(query)
-        error = self.check_errors()
+        #error = self.check_errors()
         return query
 
     def write_lines(self, lines):
@@ -38,7 +39,7 @@ class VISAInstrument():
 
     def check_errors(self):
         #TODO: implement return error handling
-        error = self.query_SCPI(":SYSTEM:ERROR?")
+        error = self.query_SCPI("SYSTEM:ERROR?")
         if error != "0, No error":
             print(f"Error Returned: {error}")
         return error
