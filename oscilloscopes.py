@@ -10,6 +10,10 @@ from VISA_instrument import VISAInstrument
 ################################################################
 
 class Keysight3000T(VISAInstrument):
+    def __init__(self):
+        self.instrument.query_delay = 0.05
+        super().__init__
+
     def segmented_initialization(self, channel):
         lines = (
             f":CHAN{channel}:DISPLAY ON",
