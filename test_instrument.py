@@ -39,5 +39,5 @@ def test_siggen():
     signal_gen.setupSine(100, 1)
     signal_gen.turnOn(channel)
 
-test_oscillscope()
+data = utils.open_pkl(r"data_test\08-06-2023-20-14-36_data_collection.pkl")
 print()
