@@ -159,16 +159,16 @@ class Keysight3000T(VISAInstrument):
 
         return x_data, y_data, time_tags, channel_info
     
-    def data_acquistion(self, acquistion_time, channels, segment_number=1000, save_directory=None, acquisition_type='HRESOLUTION'):
+    def data_acquistion(self, acquisition_time, channels, segment_number=1000, save_directory=None, acquisition_type='HRESOLUTION'):
         self.auto_setup()
-        self.setup_time_window(acquistion_time, segment_number)
+        self.setup_time_window(acquisition_time, segment_number)
         self.setup_triggering()
         for channel in channels:
             self.segmented_initialization(channel)
         self.segmented_acquistion_setup(segment_number, acquistion_type=acquisition_type)
 
         self.digitize_acquisition(channels)
-        time.sleep(2+acquistion_time)
+        time.sleep(2+acquisition_time)
 
         x_data = {}
         y_data = {}
@@ -189,8 +189,17 @@ class Keysight3000T(VISAInstrument):
                             'time_tags': time_tags,
                             'channel_info': channel_info
                         }
-            instance_variables = None
-            utils.save_to_pkl(save_dict, metadata=instance_variables, directory=save_directory, filename=filename)
+            metadata = {
+                'resource_info': self.instrument.resource_info._asdict().copy(),
+                'acquistion_info': {'type': acquisition_type, 'acq_time': acquisition_time, "segment_number": segment_number},
+                'collection_time_UTC': time.time()
+            }
+            metadata['resource_info'].update({'manufactuer_id': self.instrument.manufacturer_id,
+                                              'manufactuer_name': self.instrument.manufacturer_name,
+                                              'model_code': self.instrument.model_code,
+                                              'model_name': self.instrument.model_name,
+                                              'serial_number': self.instrument.serial_number})
+            utils.save_to_pkl(save_dict, metadata=metadata, directory=save_directory, filename=filename)
 
         return x_data, y_data, time_tags, channel_info
 
