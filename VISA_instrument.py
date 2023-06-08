@@ -14,7 +14,10 @@ class VISAInstrument():
         self.instrument.query_delay = self.query_delay
         print(f"Successfully connected to signal generator with address {address}")
 
-    def list_connections(self, verbose=False):
+    def initialise_device(self):
+        self.instrument.clear()
+
+    def list_connections(self, verbose=True):
         if verbose:
             print(self.rm.list_resources_info())
         else:
