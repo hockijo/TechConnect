@@ -32,7 +32,7 @@ def test_oscillscope():
 def test_siggen():
     channel=1
 
-    signal_gen = Agilent33250A()
+    signal_gen = Agilent33250A(gpib_address=10)
     signal_gen.connect(signal_gen.list_connections(verbose=True)[0])
 
     signal_gen.turnOff(channel)
