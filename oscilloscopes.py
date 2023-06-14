@@ -198,7 +198,8 @@ class Keysight3000T(VISAInstrument):
                                               'manufactuer_name': self.instrument.manufacturer_name,
                                               'model_code': self.instrument.model_code,
                                               'model_name': self.instrument.model_name,
-                                              'serial_number': self.instrument.serial_number})
+                                              'serial_number': self.instrument.serial_number,
+                                              'idn': self.query_SCPI(u"*IDN?")})
             utils.save_to_pkl(save_dict, metadata=metadata, directory=save_directory, filename=filename)
 
         return x_data, y_data, time_tags, channel_info
