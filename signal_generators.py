@@ -56,10 +56,10 @@ class DG1000(VISAInstrument):
     
 
 class Agilent33250A(PrologixInstrument):
-    def __init__(self):
+    def __init__(self, gpib_address):
         super().__init__()
         self.query_delay = 0.1
-        self.gpib_address = 10
+        self.gpib_address = gpib_address
 
     def query_apply(self):
         query = self.query_SCPI("APPLY?")
@@ -132,3 +132,18 @@ class DG4000(VISAInstrument):
 
         self.write_lines(lines)
         return self.query_apply()
+    
+    def setupAM(self, frequency, function, depth=100, channel=1):
+        lines = (f":SOURCE{channel}:MOD:TYPE AM",
+                    f":SOURCE{channel}:MOD:AM:INTERNAL:FUNC {function.upper()}",
+                    f":SOURCE{channel}:MOD:AM:INTERNAL:FREQ: {float(frequency)}",
+                    f":SOURCE{channel}:MOD:AM:DEPTH {float(depth)}",
+                    f":SOURCE{channel}:MOD:STATE ON",
+                )
+
+        self.write_lines(lines)
+        return self.query_apply()
+    
+    def setupRamp(self, frequency, amplitude_pp, offset=0, phase=0, channel=1, symmetry=50):
+        self.write_SCPI(f"SOURCE{channel}:FUNC:RAMP:SYMMETRY:{symmetry}")
+        return self.setupFunc("RAMP", frequency, amplitude_pp, offset, phase, channel)
