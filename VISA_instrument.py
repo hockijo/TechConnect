@@ -53,7 +53,7 @@ class VISAInstrument():
 
 class PrologixInstrument(VISAInstrument):
     def connect(self, address):
-        self.instrument = PrologixAdapter(address, self.gpib_address, serial_timeout=1000) # open_timeout=2, read_termination='\n', resource_pyclass=Prologix
+        self.instrument = PrologixAdapter(address, self.gpib_address, timeout=1000) # open_timeout=2, read_termination='\n', resource_pyclass=Prologix
         self.instrument.query_delay = self.query_delay
         #self.instrument.configure(vna_gpib_address=self.gpib_address)
         print(f"Successfully connected to signal generator with address {address}")
@@ -61,6 +61,6 @@ class PrologixInstrument(VISAInstrument):
     def query_SCPI(self, query: str):
         self.instrument.write(query)
         time.sleep(self.query_delay)
-        query = self.instrument.read()
+        query = self.instrument.read().strip('\n')
         #error = self.check_errors()
         return query
