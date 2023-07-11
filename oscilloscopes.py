@@ -6,13 +6,13 @@ from VISA_instrument import VISAInstrument
 import utils
 
 ################################################################
-#Peices salvaged from InfiniiVision_SegmentedMemory_Waveform.py#
+#Pieces salvaged from InfiniiVision_SegmentedMemory_Waveform.py#
 ################################################################
 
 class Keysight3000T(VISAInstrument):
     def __init__(self):
         super().__init__()
-        self.query_delay = 0.05
+        self.query_delay = 0.075
 
     def segmented_initialization(self, channel):
         lines = (
@@ -30,8 +30,7 @@ class Keysight3000T(VISAInstrument):
         segment_number = int(np.ceil((acquistion_time*sample_rate)/points_per_segment))
         return segment_number
     
-    def setup_time_window(self, acquistion_time, segment_number):
-        time_window = acquistion_time/segment_number
+    def setup_time_window(self, time_window):
         self.write_SCPI(f":TIMEBASE:SCALE {time_window/10}")
 
     def setup_triggering(self):
@@ -138,7 +137,7 @@ class Keysight3000T(VISAInstrument):
 
         return segment_time_tag, y_data
     
-    def collect_multi_segment_data(self, number_of_segments, channel):
+    def collect_multi_segment_data(self, number_of_segments, channel, stitched: bool):
         self.data_export_setup(channel)
         channel_info = self.retrieve_channel_info(channel)
 
@@ -154,14 +153,34 @@ class Keysight3000T(VISAInstrument):
         time_tags = np.asarray(time_tags)
         y_data = np.asarray(y_data)
 
-        x_data = self.stitch_multiseg_x_data(segment_x_data, time_tags)
-        y_data = np.reshape(y_data, x_data.shape)
+        if stitched:
+            x_data = self.stitch_multiseg_x_data(segment_x_data, time_tags)
+            y_data = np.reshape(y_data, x_data.shape)
 
         return x_data, y_data, time_tags, channel_info
     
-    def data_acquistion(self, acquisition_time, channels, segment_number=1000, save_directory=None, acquisition_type='HRESOLUTION'):
+    def parse_and_save(self, save_directory, save_dict, acquisition_info):
+        filename = f'{time.strftime(r"%d-%m-%Y-%H-%M-%S", time.localtime())}_data_collection'
+
+        metadata = {
+                'resource_info': self.instrument.resource_info._asdict().copy(),
+                'collection_time_UTC': time.time()
+            }
+        metadata['resource_info'].update({'manufactuer_id': self.instrument.manufacturer_id,
+                                            'manufactuer_name': self.instrument.manufacturer_name,
+                                            'model_code': self.instrument.model_code,
+                                            'model_name': self.instrument.model_name,
+                                            'serial_number': self.instrument.serial_number,
+                                            'idn': self.query_SCPI(u"*IDN?")})
+        if acquisition_info is not None:
+            metadata.update({'acquisition_info': acquisition_info})
+        
+        utils.save_to_pkl(save_dict, metadata=metadata, directory=save_directory, filename=filename)
+
+    def stitched_data_acquisition(self, acquisition_time, channels, segment_number=1000, save_directory=None, acquisition_type='HRESOLUTION'):
         self.auto_setup()
-        self.setup_time_window(acquisition_time, segment_number)
+        time_window = acquisition_time/segment_number
+        self.setup_time_window(time_window)
         self.setup_triggering()
         for channel in channels:
             self.segmented_initialization(channel)
@@ -175,33 +194,55 @@ class Keysight3000T(VISAInstrument):
         time_tags = {}
         channel_info = {}
         for channel in channels:
-            channel_x_data, channel_y_data, channel_time_tags, channel_channel_info = self.collect_multi_segment_data(segment_number, channel)
+            channel_x_data, channel_y_data, channel_time_tags, channel_channel_info = self.collect_multi_segment_data(segment_number, channel, stitched=True)
             x_data.update({channel: channel_x_data})
             y_data.update({channel: channel_y_data})
             time_tags.update({channel: channel_time_tags})
             channel_info.update({channel: channel_channel_info})
 
         if save_directory is not None:
-            filename = f'{time.strftime(r"%d-%m-%Y-%H-%M-%S", time.localtime())}_data_collection'
             save_dict = {
                             'x_data': x_data,
                             'y_data': y_data,
                             'time_tags': time_tags,
                             'channel_info': channel_info
                         }
-            metadata = {
-                'resource_info': self.instrument.resource_info._asdict().copy(),
-                'acquistion_info': {'type': acquisition_type, 'acq_time': acquisition_time, "segment_number": segment_number},
-                'collection_time_UTC': time.time()
-            }
-            metadata['resource_info'].update({'manufactuer_id': self.instrument.manufacturer_id,
-                                              'manufactuer_name': self.instrument.manufacturer_name,
-                                              'model_code': self.instrument.model_code,
-                                              'model_name': self.instrument.model_name,
-                                              'serial_number': self.instrument.serial_number,
-                                              'idn': self.query_SCPI(u"*IDN?")})
-            utils.save_to_pkl(save_dict, metadata=metadata, directory=save_directory, filename=filename)
+            acquisition_info = {'type': acquisition_type, 'acq_time': acquisition_time, "segment_number": segment_number, 'time_window': time_window, 'stitched': True}
+            self.parse_and_save(save_directory, save_dict, acquisition_info)
 
         return x_data, y_data, time_tags, channel_info
+    
+    def unstitched_data_acquisition(self, time_window, segment_number, channels, save_directory=None, acquisition_type='HRESOLUTION'):
+        self.auto_setup()
+        self.setup_time_window(time_window)
+        self.setup_triggering()
+        for channel in channels:
+            self.segmented_initialization(channel)
+        self.segmented_acquistion_setup(segment_number, acquistion_type=acquisition_type)
 
+        self.digitize_acquisition(channels)
+        time.sleep(2+(time_window*segment_number))
+
+        x_data = {}
+        y_data = {}
+        time_tags = {}
+        channel_info = {}
+        for channel in channels:
+            channel_x_data, channel_y_data, channel_time_tags, channel_channel_info = self.collect_multi_segment_data(segment_number, channel, stitched=False)
+            x_data.update({channel: channel_x_data})
+            y_data.update({channel: channel_y_data})
+            time_tags.update({channel: channel_time_tags})
+            channel_info.update({channel: channel_channel_info})
+
+        if save_directory is not None:
+            save_dict = {
+                            'x_data': x_data,
+                            'y_data': y_data,
+                            'time_tags': time_tags,
+                            'channel_info': channel_info
+                        }
+            acquisition_info = {'type': acquisition_type, 'acq_time': time_window*segment_number, "segment_number": segment_number, 'time_window': time_window, 'stitched': False}
+            self.parse_and_save(save_directory, save_dict, acquisition_info)
+
+        return x_data, y_data, time_tags, channel_info
 
