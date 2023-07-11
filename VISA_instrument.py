@@ -1,7 +1,7 @@
 import numpy as np 
 import pyvisa
 import time
-from adapters import PrologixAdapter
+from adapters.prologix import PrologixAdapter
 
 
 class VISAInstrument():
