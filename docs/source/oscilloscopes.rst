@@ -3,5 +3,5 @@ Oscilloscopes
 
 Keysight3000T
 -----------------------------
-.. automodule:: techconnect.oscilloscopes
+.. automodule:: oscilloscopes
    :members:
