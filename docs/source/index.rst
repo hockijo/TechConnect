@@ -3,7 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to TechConnect's documentation!
+Welcome to TechConnect!
 =======================================
 
 .. toctree::
@@ -19,10 +19,6 @@ Indices and tables
 * :ref:`modindex`
 * :ref:`search`
 
-TechConnect modules
-===================
 
 Oscilloscopes
--------------
-.. automodule:: oscilloscopes.stitched_data_acquisition
-   :members:
+=============
