@@ -12,13 +12,9 @@ Welcome to TechConnect!
 
 
 
-Indices and tables
-==================
+Contents
+--------
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+.. toctree::
 
-
-Oscilloscopes
-=============
+   api
