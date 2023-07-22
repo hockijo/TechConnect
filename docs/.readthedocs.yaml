@@ -32,4 +32,4 @@ python:
   install:
   - requirements: docs/requirements.txt
   - method: pip
-      path: .
+    path: .
