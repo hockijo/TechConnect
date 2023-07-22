@@ -6,7 +6,7 @@ __pycache__
 **.json
 
 #ignore .egg files
-**.egg
+**.egg-info
 
 #ignore doc html built files
 html
