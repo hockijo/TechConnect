@@ -4,19 +4,19 @@ VISA Instrument
 .. autosummary::
     :toctree: api/
 
-    VISA_instrument
+    techconnect.VISA_instrument
 
 
 .. autosummary::
     :toctree: api/
     :recursive:
 
-    VISA_instrument.VISAInstrument
+    techconnect.VISA_instrument.VISAInstrument
 
 
 .. autosummary::
     :toctree: api/
     :recursive:
 
-    VISA_instrument.PrologixInstrument
+    techconnect.VISA_instrument.PrologixInstrument
 
