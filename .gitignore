@@ -4,3 +4,9 @@ __pycache__
 #ignore pickled data files
 **.pkl
 **.json
+
+#ignore .egg files
+**.egg
+
+#ignore doc html built files
+html
