@@ -1,10 +1,43 @@
+"""
+Module for the base classes of the instruments. Contain methods for communicating with instruments, and
+the specific instrument classes inherit these methods
+"""
+
+import time
 import numpy as np 
 import pyvisa
-import time
 from adapters.prologix import PrologixAdapter
 
-
 class VISAInstrument():
+    """
+    For instruments communicating via VISA (ie USB, ethernet, etc)
+
+    Attributes:
+    -----------
+    instrument: pyvisa Resource
+        the instrument connected
+    query_delay: float
+        delay in seconds
+    
+    Methods:
+    --------
+    connect(address)
+        connects to an instrument
+    list_connections(verbose=True)
+        list connections available
+    initialise_device()
+        initialises the device by clearing any existing data
+    write_SCPI(command)
+        writes a command to the instrument
+    query_SCPI(query)
+        queries the instrument and returns query
+    write_lines(lines)
+        writes lines to the instrument
+    close_device()
+        clears and closes the instrument
+    check_error()
+        checks for and returns errors
+    """
     def __init__(self):
         self.query_delay = 0.1
         self.rm = pyvisa.ResourceManager()
@@ -14,9 +47,12 @@ class VISAInstrument():
         Connects to an instrument at the specified address.
 
         Parameters:
-            address (str): The address of the instrument.
+        -----------
+        address: str
+            The address of the instrument.
 
         Returns:
+        --------
             None
         """
         self.instrument = self.rm.open_resource(address, open_timeout=2, read_termination='\n')
@@ -30,6 +66,7 @@ class VISAInstrument():
         This function is responsible for initializing the device. It clears any existing data on the instrument.
 
         Returns:
+        --------
             None
         """
         self.instrument.clear()
@@ -39,10 +76,14 @@ class VISAInstrument():
         List connections and print the resource information if verbose is True. Otherwise, print only the resource names.
 
         Parameters:
-            verbose (bool, optional): Whether to print resource information. Defaults to True.
+        -----------
+        verbose: bool, optional
+            Whether to print resource information. Defaults to True.
 
         Returns:
-            list: A list of resource names.
+        --------
+        list
+            A list of resource names.
         """
         if verbose:
             print(self.rm.list_resources_info())
@@ -55,9 +96,12 @@ class VISAInstrument():
         Writes an SCPI command to the instrument.
 
         Parameters:
-            command (str): The SCPI command to be written.
+        -----------
+        command: str
+            The SCPI command to be written.
 
         Returns:
+        --------
             None
         """
         print(command)
@@ -69,10 +113,14 @@ class VISAInstrument():
         Execute a SCPI query command and return the response.
 
         Parameters:
-            query (str): The SCPI query command to send to the instrument.
+        -----------
+        query: str
+            The SCPI query command to send to the instrument.
 
         Returns:
-            str: The response received from the instrument.
+        --------
+        str
+            The response received from the instrument.
 
         """
         query = self.instrument.query(query)
@@ -84,9 +132,12 @@ class VISAInstrument():
         Writes a list of lines to the device.
 
         Parameters:
-            lines (list): The list of lines to write.
+        -----------
+        lines: list or tuple
+            The list of lines to write.
 
         Returns:
+        --------
             None
         """
         for line in lines:
@@ -100,6 +151,7 @@ class VISAInstrument():
         This function clears the instrument and then closes the connection to the device.
 
         Returns:
+        --------
             None
         """
         self.instrument.clear()
@@ -110,7 +162,9 @@ class VISAInstrument():
         Check for errors by querying the SCPI and handling the returned error.
 
         Returns:
-            str: The error message returned by the SCPI query.
+        --------
+        str
+            The error message returned by the SCPI query.
         """
         #TODO: implement return error handling
         error = self.query_SCPI("SYSTEM:ERROR?")
@@ -120,14 +174,46 @@ class VISAInstrument():
     
 
 class PrologixInstrument(VISAInstrument):
+    """
+    For instruments communicating via Prologix GPIB adapter
+
+    Attributes:
+    -----------
+    instrument: pyvisa Resource
+        the instrument connected
+    query_delay: float
+        delay in seconds
+    
+    Methods:
+    --------
+    connect(address)
+        connects to an instrument
+    list_connections(verbose=True)
+        list connections available
+    initialise_device()
+        initialises the device by clearing any existing data
+    write_SCPI(command)
+        writes a command to the instrument
+    query_SCPI(query)
+        queries the instrument and returns query
+    write_lines(lines)
+        writes lines to the instrument
+    close_device()
+        clears and closes the instrument
+    check_error()
+        checks for and returns errors
+    """
     def connect(self, address):
         """
         Connects to an instrument at the specified address.
 
         Parameters:
-            address (str): The address of the instrument to connect to.
+        -----------
+        address: str
+            The address of the instrument to connect to.
 
         Returns:
+        --------
             None
         """
         
@@ -141,10 +227,14 @@ class PrologixInstrument(VISAInstrument):
         Send a query to the SCPI instrument and return the response.
 
         Parameters:
-            query (str): The query to send to the instrument.
+        -----------
+        query: str
+            The query to send to the instrument.
 
         Returns:
-            str: The response from the instrument.
+        --------
+        str
+            The response from the instrument.
 
         """
         self.instrument.write(query)
