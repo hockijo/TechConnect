@@ -1,7 +1,7 @@
 '''
 Setup for my_package that describes it's contents and how to install it.
 '''
-from setuptools import setup
+from setuptools import setup, find_packages
 
 # List of dependencies for the package
 # >= Can be used to specify a minimum version
@@ -26,7 +26,7 @@ setup(
     # Minimum version of python required
     python_requires='>=3.6',
     # Name of your package, should be the same as the name of the directory
-    packages=['TechConnect', 'TechConnect.scripts'],
+    packages=find_packages('src', exclude=['test']),
     # Any data files that need to be included with the package (non python files)
     # package_data={'TechConnect':['data/*.csv']},
     # Dependencies for the package
