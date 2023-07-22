@@ -12,7 +12,7 @@ import utils
 class Keysight3000T(VISAInstrument):
     def __init__(self):
         super().__init__()
-        self.query_delay = 0.075
+        self.query_delay = 0.1
 
     def segmented_initialization(self, channel):
         lines = (
@@ -36,7 +36,7 @@ class Keysight3000T(VISAInstrument):
     def setup_triggering(self):
         lines = (":TRIGGER:MODE EDGE",
                  ":TRIGGER:EDGE:SOURCE EXT",
-                 ":TRIGGER:EDGE:SLOPE EITHER")
+                 ":TRIGGER:EDGE:SLOPE POSITIVE")
         self.write_lines(lines)
 
     def segmented_acquistion_setup(self, segment_count:int,  
@@ -132,7 +132,7 @@ class Keysight3000T(VISAInstrument):
         self.write_SCPI(f":ACQUIRE:SEGMENTED:INDEX {segment_index}")
         segment_time_tag = float(self.query_SCPI(f":WAVEFORM:SEGMENTED:TTAG?"))
 
-        y_data = np.asarray(self.instrument.query_binary_values(f":WAVEFORM:SOURCE CHAN{channel};DATA?", 'h', False))
+        y_data = np.asarray(self.instrument.query_binary_values(f":WAVEFORM:SOURCE CHAN{channel};DATA?", delay=0, datatype='h', is_big_endian=False))
         y_data = self.scale_y_data(y_data, channel_info)
 
         return segment_time_tag, y_data
@@ -156,6 +156,8 @@ class Keysight3000T(VISAInstrument):
         if stitched:
             x_data = self.stitch_multiseg_x_data(segment_x_data, time_tags)
             y_data = np.reshape(y_data, x_data.shape)
+        else:
+            x_data = segment_x_data
 
         return x_data, y_data, time_tags, channel_info
     
@@ -187,7 +189,7 @@ class Keysight3000T(VISAInstrument):
         self.segmented_acquistion_setup(segment_number, acquistion_type=acquisition_type)
 
         self.digitize_acquisition(channels)
-        time.sleep(2+acquisition_time)
+        time.sleep(1.5*acquisition_time+2)
 
         x_data = {}
         y_data = {}
@@ -221,7 +223,7 @@ class Keysight3000T(VISAInstrument):
         self.segmented_acquistion_setup(segment_number, acquistion_type=acquisition_type)
 
         self.digitize_acquisition(channels)
-        time.sleep(2+(time_window*segment_number))
+        time.sleep(3*(time_window*segment_number)+0.1*segment_number)
 
         x_data = {}
         y_data = {}
