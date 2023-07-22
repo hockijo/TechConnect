@@ -10,3 +10,6 @@ __pycache__
 
 #ignore doc html built files
 html
+
+#ignore auto-generated api docs
+docs/source/api
