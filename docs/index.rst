@@ -6,15 +6,4 @@
 Welcome to TechConnect!
 =======================================
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
-
-
-
-Contents
---------
-
-.. toctree::
-
-   api
+.. toctree:: api/
