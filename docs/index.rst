@@ -6,4 +6,15 @@
 Welcome to TechConnect!
 =======================================
 
-.. toctree:: api/
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+   
+   VISA_instrument
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
