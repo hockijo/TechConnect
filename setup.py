@@ -18,7 +18,7 @@ setup(
     # Name of the repository
     name='TechConnect',
     # Version of the software (keep this up to date with git tags/releases)
-    version=0.1,
+    version='0.0.1',
     # Short description of the package
     description='...',
     # Update this with your github URL

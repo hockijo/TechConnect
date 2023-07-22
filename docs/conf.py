@@ -23,7 +23,7 @@ copyright = '2023, Joseph Hocking'
 author = 'Joseph Hocking'
 
 # The full version, including alpha/beta/rc tags
-release = 'alpha-0.1'
+release = '0.0.1'
 
 
 # -- General configuration ---------------------------------------------------
