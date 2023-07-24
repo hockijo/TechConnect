@@ -12,6 +12,7 @@ Welcome to TechConnect!
    
    source/_instrument
    source/oscilloscope
+   source/signal_generators
 
 Indices and tables
 ==================
