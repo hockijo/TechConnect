@@ -1,7 +1,7 @@
 Oscilloscopes
-===========
+=============
 
-.. automodule:: techconnect.base._instrument
+.. automodule:: techconnect.oscilloscopes.keysight
 
 .. autoclass:: techconnect.oscilloscopes.keysight.Keysight3000T
     :members:

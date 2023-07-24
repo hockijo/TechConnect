@@ -1,3 +1,9 @@
+"""
+Rigol
+========
+This module contains the instrument classes for rigol signal generators.
+"""
+
 import numpy as np 
 from base._instrument import VISAInstrument, PrologixInstrument
 

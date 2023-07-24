@@ -1,3 +1,9 @@
+"""
+Agilent
+========
+This module contains the instrument classes for Agilent signal generators.
+"""
+
 import numpy as np 
 from base._instrument import VISAInstrument, PrologixInstrument
 
