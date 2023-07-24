@@ -5,7 +5,7 @@ This module contains the instrument classes for rigol signal generators.
 """
 
 import numpy as np 
-from base._instrument import VISAInstrument, PrologixInstrument
+from techconnect.base._instrument import VISAInstrument, PrologixInstrument
 
 
 class DG1000(VISAInstrument):

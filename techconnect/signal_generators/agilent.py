@@ -5,7 +5,7 @@ This module contains the instrument classes for Agilent signal generators.
 """
 
 import numpy as np 
-from base._instrument import VISAInstrument, PrologixInstrument
+from techconnect.base._instrument import VISAInstrument, PrologixInstrument
 
 
 class Agilent33250A(PrologixInstrument):
