@@ -8,6 +8,8 @@ import numpy as np
 import pyvisa
 from adapters.prologix import PrologixAdapter
 
+__all__ = ['VISAInstrument', 'PrologixInstrument']
+
 class VISAInstrument():
     """
     For instruments communicating via VISA (ie USB, ethernet, etc)

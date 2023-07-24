@@ -1,5 +1,5 @@
 import numpy as np 
-from base.VISA_instrument import VISAInstrument, PrologixInstrument
+from base._instrument import VISAInstrument, PrologixInstrument
 
 
 class DG1000(VISAInstrument):

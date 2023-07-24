@@ -2,14 +2,16 @@ import numpy as np
 import pickle as pkl
 import os
 import time
-from base.VISA_instrument import VISAInstrument
-import tools.file_handling as file_handling
+from techconnect.base._instrument import VISAInstrument
+import techconnect.tools.file_handling as file_handling
+
+__all__ = []
 
 ################################################################
 #Pieces salvaged from InfiniiVision_SegmentedMemory_Waveform.py#
 ################################################################
 
-class ossciloscope(VISAInstrument):
+class oscilloscope(VISAInstrument):
     def __init__(self):
         super().__init__()
         self.query_delay = 0.1
