@@ -1,5 +1,6 @@
 Instrument Base Module
 ======================
+.. automodule:: techconnect.base._instrument
 
 .. autoclass:: techconnect.base._instrument.VISAInstrument
     :members:
