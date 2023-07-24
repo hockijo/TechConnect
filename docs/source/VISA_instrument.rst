@@ -1,22 +1,19 @@
 VISA Instrument
 ===============
 
-.. autosummary::
+.. automodule:: base.VISA_instrument
     :toctree: api/
+    :members:
 
-    VISA_instrument
-
-
-.. autosummary::
+.. autoclass:: base.VISA_instrument.VISAInstrument
     :toctree: api/
-    :recursive:
+    :members:
+    :inherited-members:
 
-    VISA_instrument.VISAInstrument
-
-
-.. autosummary::
+.. autosummary:: base.VISA_instrument.PrologixInstrument
     :toctree: api/
-    :recursive:
+    :members:
+    :inherited-members:
 
-    VISA_instrument.PrologixInstrument
+    
 
