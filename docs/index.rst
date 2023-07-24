@@ -10,7 +10,8 @@ Welcome to TechConnect!
    :maxdepth: 2
    :caption: Contents:
    
-   source/VISA_instrument
+   source/_instrument
+   source/oscilloscope
 
 Indices and tables
 ==================
