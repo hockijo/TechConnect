@@ -191,19 +191,19 @@ class PrologixInstrument(VISAInstrument):
     connect(address)
         connects to an instrument
     list_connections(verbose=True)
-        list connections available
+        list connections available, inherited from VISAInstrument
     initialise_device()
-        initialises the device by clearing any existing data
+        initialises the device by clearing any existing data, inherited from VISAInstrument
     write_SCPI(command)
-        writes a command to the instrument
+        writes a command to the instrument, inherited from VISAInstrument
     query_SCPI(query)
         queries the instrument and returns query
     write_lines(lines)
-        writes lines to the instrument
+        writes lines to the instrument, inherited from VISAInstrument
     close_device()
-        clears and closes the instrument
+        clears and closes the instrument, inherited from VISAInstrument
     check_error()
-        checks for and returns errors
+        checks for and returns errors, inherited from VISAInstrument
     """
     def connect(self, address):
         """
