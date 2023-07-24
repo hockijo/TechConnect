@@ -1,5 +1,5 @@
 import numpy as np 
-from VISA_instrument import VISAInstrument, PrologixInstrument
+from base.VISA_instrument import VISAInstrument, PrologixInstrument
 
 class Agilent89410A(PrologixInstrument):
     def __init__(self):

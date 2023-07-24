@@ -4,9 +4,9 @@ import os
 import time
 import matplotlib.pyplot as plt
 
-from oscilloscopes import Keysight3000T
-from signal_generators import Agilent33250A
-import utils
+from oscilloscopes.oscilloscopes import Keysight3000T
+from signal_generators.signal_generators import Agilent33250A
+import tools.file_handling as file_handling
 
 def test_oscillscope():
     ossc = Keysight3000T()
@@ -39,5 +39,5 @@ def test_siggen():
     signal_gen.setupSine(100, 1)
     signal_gen.turnOn(channel)
 
-data = utils.open_pkl(r"data_test\08-06-2023-20-14-36_data_collection.pkl")
+data = file_handling.open_pkl(r"data_test\08-06-2023-20-14-36_data_collection.pkl")
 print()

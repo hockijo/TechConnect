@@ -2,8 +2,8 @@ import numpy as np
 import pickle as pkl
 import os
 import time
-from VISA_instrument import VISAInstrument
-import utils
+from base.VISA_instrument import VISAInstrument
+import tools.file_handling as file_handling
 
 ################################################################
 #Pieces salvaged from InfiniiVision_SegmentedMemory_Waveform.py#
@@ -177,7 +177,7 @@ class Keysight3000T(VISAInstrument):
         if acquisition_info is not None:
             metadata.update({'acquisition_info': acquisition_info})
         
-        utils.save_to_pkl(save_dict, metadata=metadata, directory=save_directory, filename=filename)
+        file_handling.save_to_pkl(save_dict, metadata=metadata, directory=save_directory, filename=filename)
 
     def stitched_data_acquisition(self, acquisition_time, channels, segment_number=1000, save_directory=None, acquisition_type='HRESOLUTION'):
         self.auto_setup()
