@@ -4,12 +4,13 @@ import os
 import time
 from base.VISA_instrument import VISAInstrument
 import tools.file_handling as file_handling
+from oscilloscopes._ossc_base import ossciloscope 
 
 ################################################################
 #Pieces salvaged from InfiniiVision_SegmentedMemory_Waveform.py#
 ################################################################
 
-class Keysight3000T(VISAInstrument):
+class Keysight3000T(ossciloscope):
     def __init__(self):
         super().__init__()
         self.query_delay = 0.1
