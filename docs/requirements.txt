@@ -3,6 +3,4 @@ sphinx-rtd-theme>=1.2.2
 myst-parser>=2.0.0
 sphinx>=6.2.1
 pydata-sphinx-theme>=0.13.3
-numpy
-scipy
-pyvisa
+

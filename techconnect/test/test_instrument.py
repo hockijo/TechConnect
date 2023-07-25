@@ -4,9 +4,9 @@ import os
 import time
 import matplotlib.pyplot as plt
 
-from oscilloscopes.oscilloscopes import Keysight3000T
-from signal_generators.signal_generators import Agilent33250A
-import tools.file_handling as file_handling
+from techconnect.oscilloscopes.keysight import Keysight3000T
+from techconnect.signal_generators.agilent import Agilent33250A
+import techconnect.tools.file_handling as file_handling
 
 def test_oscillscope():
     ossc = Keysight3000T()
