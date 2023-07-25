@@ -163,7 +163,6 @@ class Keysight3000T(Oscilloscope):
         -------
         None
         """
-
         lines = (
             f":ACQUIRE:MODE SEGMENTED",
             f":ACQUIRE:SEGMENTED:COUNT {segment_count}",
