@@ -6,7 +6,7 @@ the specific instrument classes inherit these methods
 import time
 import numpy as np 
 import pyvisa
-from adapters.prologix import PrologixAdapter
+from techconnect.adapters.prologix import PrologixAdapter
 
 __all__ = ['VISAInstrument', 'PrologixInstrument']
 
