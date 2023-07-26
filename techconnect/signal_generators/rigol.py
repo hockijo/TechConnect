@@ -315,7 +315,7 @@ class DG4000(VISAInstrument):
         return self.query_apply()
     
     def setupSweep(self, start_frequency, stop_frequency, amplitude_pp, sweep_time, 
-                   return_time=0, spacing='LINEAR', trigger_source='INTERNAL', channel=1):
+                return_time=0, spacing='LINEAR', trigger_source='INTERNAL', channel=1):
         """
         Sets up a sweep on a specified channel of the instrument.
 
@@ -376,7 +376,7 @@ class DG4000(VISAInstrument):
         Returns
         -------
         str
-           The applied AM settings.
+        The applied AM settings.
         """
 
         lines = (f":SOURCE{channel}:MOD:TYPE AM",
