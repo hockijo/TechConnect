@@ -5,6 +5,9 @@
 
 Welcome to TechConnect!
 =======================================
+README
+------
+.. mdinclude:: ../README.md
 
 .. toctree::
    :maxdepth: 2
