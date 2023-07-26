@@ -10,8 +10,7 @@ dependencies = [
         'numpy',
         'scipy',
         'pyvisa',
-        'numpydoc',
-        'myst-parser',
+        'matplotlib',
 ]
 
 setup(
