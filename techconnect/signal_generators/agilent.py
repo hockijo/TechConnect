@@ -42,6 +42,10 @@ class Agilent33250A(PrologixInstrument):
         self.query_delay = 0.1
         self.gpib_address = gpib_address
 
+    def _check_channel(channel):
+         if channel is not 1:
+            raise ValueError("There is only one channel for this instrument")
+
     def query_apply(self):
         """
         Retrieves the current signal generator configuration by sending the SCPI command "APPLY?".
@@ -55,7 +59,7 @@ class Agilent33250A(PrologixInstrument):
         print(f"Signal Generator setup {query}")
         return query
     
-    def turnOn(self):
+    def turnOn(self, channel=1):
         """
         Turns on the device.
 
@@ -67,9 +71,10 @@ class Agilent33250A(PrologixInstrument):
         -------
         None
         """
+        self._check_channel(channel)
         self.write_SCPI("OUTPUT ON")
 
-    def turnOff(self):
+    def turnOff(self, channel=1):
         """
         Turns off the device.
 
@@ -81,9 +86,10 @@ class Agilent33250A(PrologixInstrument):
         -------
         None
         """
+        self._check_channel(channel)
         self.write_SCPI("OUTPUT OFF")
 
-    def setupSine(self, frequency, amplitude_pp, offset=0, phase=0):
+    def setupSine(self, frequency, amplitude_pp, offset=0, phase=0, channel=1):
         """
         Set up a sine wave function with the given parameters.
 
@@ -103,9 +109,10 @@ class Agilent33250A(PrologixInstrument):
         str
             The applied sine wave settings.
         """
+        self._check_channel(channel)
         return self.setupFunc("SIN", frequency, amplitude_pp, offset, phase)
 
-    def setupFunc(self, func: str, frequency, amplitude_pp, offset=0, phase=0):
+    def setupFunc(self, func: str, frequency, amplitude_pp, offset=0, phase=0, channel=1):
         """
         Sets up a function on the instrument.
 
@@ -127,6 +134,7 @@ class Agilent33250A(PrologixInstrument):
         str
             The applied settings.
         """
+        self._check_channel(channel)
 
         lines = (f"FUNC {func.upper()}",
                     f"FREQ {float(frequency)}",
