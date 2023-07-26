@@ -171,7 +171,7 @@ class Oscilloscope(VISAInstrument):
 
         return x_data, y_data, time_tags, channel_info
     
-    def parse_and_save(self, save_directory, save_dict, acquisition_info):
+    def parse_and_save(self, save_directory, save_dict, acquisition_info=None, add_to_md=None):
         """
         Parses the data and saves it to a specified directory.
 
@@ -182,7 +182,9 @@ class Oscilloscope(VISAInstrument):
         save_dict : dict
             A dictionary containing the data to be saved.
         acquisition_info : dict, optional
-            An optional dictionary containing additional acquisition information.
+            An optional dictionary containing acquisition information.
+        add_to_md : dict, optional
+            An optional dictionary containing additional metadata.
 
         Returns
         -------
@@ -202,10 +204,12 @@ class Oscilloscope(VISAInstrument):
                                             'idn': self.query_SCPI(u"*IDN?")})
         if acquisition_info is not None:
             metadata.update({'acquisition_info': acquisition_info})
+        if add_to_md is not None:
+            metadata.update(add_to_md)
         
         file_handling.save_to_pkl(save_dict, metadata=metadata, directory=save_directory, filename=filename)
 
-    def stitched_data_acquisition(self, acquisition_time, channels, segment_number=1000, save_directory=None, acquisition_type='HRESOLUTION'):
+    def stitched_data_acquisition(self, acquisition_time, channels, segment_number=1000, save_directory=None, acquisition_type='HRESOLUTION', add_to_md=None):
         """
         Perform stitched data acquisition.
 
@@ -221,6 +225,8 @@ class Oscilloscope(VISAInstrument):
             The directory to save the acquired data. `None` will not save, otherwise will create and save to given directory. Defaults to None.
         acquisition_type : str, optional
             The acquisition type. Defaults to 'HRESOLUTION'.
+        add_to_md : dict, optional
+            An optional dictionary containing additional metadata.
 
         Returns
         -------
@@ -257,11 +263,11 @@ class Oscilloscope(VISAInstrument):
                             'channel_info': channel_info
                         }
             acquisition_info = {'type': acquisition_type, 'acq_time': acquisition_time, "segment_number": segment_number, 'time_window': time_window, 'stitched': True}
-            self.parse_and_save(save_directory, save_dict, acquisition_info)
+            self.parse_and_save(save_directory, save_dict, acquisition_info, add_to_md=add_to_md)
 
         return x_data, y_data, time_tags, channel_info
     
-    def unstitched_data_acquisition(self, time_window, segment_number, channels, save_directory=None, acquisition_type='HRESOLUTION'):
+    def unstitched_data_acquisition(self, time_window, segment_number, channels, save_directory=None, acquisition_type='HRESOLUTION', add_to_md=None):
         """
         Perform unstitched data acquisition for a given time window, segment number, and channels.
 
@@ -277,6 +283,8 @@ class Oscilloscope(VISAInstrument):
             The directory to save the acquired data. Default is None.
         acquisition_type : str, optional
             The type of acquisition. Default is 'HRESOLUTION'.
+        add_to_md : dict, optional
+            An optional dictionary containing additional metadata.
 
         Returns
         -------
@@ -312,7 +320,7 @@ class Oscilloscope(VISAInstrument):
                             'channel_info': channel_info
                         }
             acquisition_info = {'type': acquisition_type, 'acq_time': time_window*segment_number, "segment_number": segment_number, 'time_window': time_window, 'stitched': False}
-            self.parse_and_save(save_directory, save_dict, acquisition_info)
+            self.parse_and_save(save_directory, save_dict, acquisition_info, add_to_md=add_to_md)
 
         return x_data, y_data, time_tags, channel_info
 
