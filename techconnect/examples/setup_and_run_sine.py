@@ -1,6 +1,6 @@
 """
 Setup and run a sine wave on a GPIB instrument
-==============================================
+----------------------------------------------
 This example script sets up a sine wave on an Agilent 33250A signal generator connected over a Prologix GPIB adaptor
 
 Usage:

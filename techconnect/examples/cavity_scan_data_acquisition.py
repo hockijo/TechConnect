@@ -1,6 +1,6 @@
 """
 Cavity scan data acquisition
-============================
+----------------------------
 This example script performs data acquisition for a cavity scan using a Keysight 3000T series oscilloscope.
 
 Usage:
