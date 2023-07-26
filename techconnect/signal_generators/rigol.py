@@ -1,6 +1,6 @@
 """
 Rigol
-========
+-----
 This module contains the instrument classes for rigol signal generators.
 """
 

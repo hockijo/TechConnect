@@ -1,6 +1,6 @@
 """
 Keysight
-========
+--------
 This module contains the instrument classes for keysight oscilloscopes. It uses the methods created in the base class for the data parsing and saving,
 but the communication is handled by the methods defined here.
 

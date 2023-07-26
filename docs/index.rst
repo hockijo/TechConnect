@@ -15,13 +15,16 @@ joseph.hocking@uwa.edu.au
 Installation 
 ------------
 Due to the dev state of this package, currently the preferred method of installation is github cloning, and installation through pip. To do this first clone the github repo by:
-```
+
+`
 git clone https://github.com/hockijo/TechConnect
-```
-Then navigate to the cloned directory in your preferred prompt for installing python packages(should be called TechConnect) and run the following:
-```
+`
+
+Then navigate to the cloned directory in your preferred prompt for installing python packages (should be called TechConnect) and run the following:
+
+`
 pip install .
-```
+`
 
 API
 ===

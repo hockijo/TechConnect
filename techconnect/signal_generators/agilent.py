@@ -1,6 +1,6 @@
 """
 Agilent
-========
+-------
 This module contains the instrument classes for Agilent signal generators.
 """
 
