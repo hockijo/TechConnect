@@ -280,38 +280,40 @@ class DG4000(VISAInstrument):
         """
         return self.setupFunc("SIN", frequency, amplitude_pp, offset, phase, channel)
 
-    def setupFunc(self, func: str, frequency, amplitude_pp, offset, phase, channel):
+    def setupFunc(self, func: str, frequency, amplitude_pp, offset, phase, channel, delay=0):
         """
         Set up the function parameters for generating a waveform on a specific channel of the instrument.
 
         Parameters
         ----------
         func : str
-            The type of waveform to generate.
+            The type of waveform to generate, ('SIN', 'RAMP', 'HARMONIC', 'NOISE', 'PULSE', 'SQUARE' or 'CUSTOM').
         frequency : float
             The frequency of the waveform in Hz.
         amplitude_pp : float
             The peak-to-peak amplitude of the waveform in volts.
-        offset : float, optional
-            The DC offset of the waveform in volts. Defaults to 0.
-        phase : float, optional
-            The phase shift of the waveform in degrees. Defaults to 0.
-        channel : int, optional
-            The channel number to generate the waveform on. Defaults to 1.
+        offset : float
+            The DC offset of the waveform in volts.
+        phase : float
+            The phase shift of the waveform in degrees.
+        channel : int
+            The channel number to generate the waveform on.
+        delay : float, optional
+            The delay time (in seconds) for a pulse waveform. Defaults to 0.
 
         Returns
         -------
         str
             The applied settings.
         """
-        lines = (f":SOURCE{channel}:FUNC {func.upper()}",
-                    f":SOURCE{channel}:FREQ:FIXED: {float(frequency)}",
-                    f":SOURCE{channel}:VOLT {float(amplitude_pp)}",
-                    f":SOURCE{channel}:VOLT:OFFSET {float(offset)}",
-                    f":SOURCE{channel}:PHASE {float(phase)}",
-                )
+        if func.upper() in ['SIN', 'RAMP', 'HARMONIC', 'SQUARE', 'CUSTOM']:
+            line = f"SOURCE{channel}:APPLY:{func.upper()} {frequency},{amplitude_pp},{offset},{phase}"
+        elif func.upper == 'NOISE':
+            line = f"SOURCE{channel}:APPLY:{func.upper()} {amplitude_pp},{offset}"
+        elif func.upper == 'PULSE':
+            line = f"SOURCE{channel}:APPLY:{func.upper()} {frequency},{amplitude_pp},{offset},{phase},{delay}"
 
-        self.write_lines(lines)
+        self.write_SCPI(line)
         return self.query_apply()
     
     def setupSweep(self, start_frequency, stop_frequency, amplitude_pp, sweep_time, 
@@ -414,4 +416,5 @@ class DG4000(VISAInstrument):
             The applied ramp settings.
         """
         self.write_SCPI(f"SOURCE{channel}:FUNC:RAMP:SYMMETRY:{symmetry}")
-        return self.setupFunc("RAMP", frequency, amplitude_pp, offset, phase, channel)
+        self.setupFunc("RAMP", frequency, amplitude_pp, offset, phase, channel)
+        return self.query_apply()
