@@ -149,6 +149,7 @@ class Oscilloscope(VISAInstrument):
                 The channel information.
         """
         self.data_export_setup(channel)
+        time.sleep(0.5)
         channel_info = self.retrieve_channel_info(channel)
 
         segment_x_data = self.generate_x_data(channel_info)
