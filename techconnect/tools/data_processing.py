@@ -18,15 +18,20 @@ def find_single_ramp_1D(data, threshold='auto', direction=None, turning_point_in
     if lpfilter:
         data_normd = lowpass_filter(data_normd, 0.75)
     if len(data)>500:
-        data_normd = signal.decimate(data_normd, 10)
-        decimation *= 10
-    if len(data)>2000:
-        data_normd = signal.decimate(data_normd, 5)
-        decimation *= 5
-
+        decimation = int(len(data)/500) # calculate decimation factor to bring down to 500 samples
+        decimation =  int(decimation//2)*2 + 1 # ensure the decimation is odd to avoid scipy.decimate attentuation
+        applied_dec = 1
+        data_normd = signal.decimate(data_normd, decimation)
+        """if decimation>10:
+            while applied_dec<decimation:
+                data_normd = signal.decimate(data_normd, 2)
+                applied_dec *= 2
+        else:
+            data_normd = signal.decimate(data_normd, 10)"""
+    
     data_diff=np.diff(data_normd)
     if threshold == 'auto':
-        threshold = 0.65*np.max(np.abs(np.diff(data_diff)))
+        threshold = 0.55*np.max(np.abs(np.diff(data_diff)))
     turning_points, peak_info = signal.find_peaks(np.abs(np.diff(data_diff)), height=threshold)
     turning_points = turning_points*decimation + int(decimation//2)
 
