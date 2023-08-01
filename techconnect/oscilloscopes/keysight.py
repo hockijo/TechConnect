@@ -97,6 +97,21 @@ class Keysight3000T(Oscilloscope):
         )
 
         self.write_lines(lines)
+    
+    def retrieve_channel_info(self, channel):
+        channel_info = self.query_SCPI(f":WAVEFORM:SOURCE CHAN{channel};:WAVEFORM:PREAMBLE?").split(',')
+        return {
+            'format': int(channel_info[0]),
+            'type': int(channel_info[1]),
+            'points': int(float(channel_info[2])),
+            'count': int(channel_info[3]),
+            'xincrement': float(channel_info[4]),
+            'xorigin': float(channel_info[5]),
+            'xreference': float(channel_info[6]),
+            'yincrement': float(channel_info[7]),
+            'yorigin': float(channel_info[8]),
+            'yreference': float(channel_info[9])
+        }
 
     def calculate_segment_number(self, acquisition_time):
         """
