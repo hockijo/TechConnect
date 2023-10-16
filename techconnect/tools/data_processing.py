@@ -67,3 +67,20 @@ def lowpass_filter(arr, corner_frequency):
     """
     b, a = signal.butter(3, corner_frequency)
     return signal.filtfilt(b, a, arr)
+
+def find_resonance_peaks(transmission, skip_column=None, **kwargs):
+    peaks_x=[]
+    peaks_y=[]
+    for col in range(transmission.shape[1]):
+        if skip_column is not None:
+            if col in skip_column:
+                continue
+        x_peak = signal.find_peaks(transmission[:, col], **kwargs)[0]
+        peaks_x.append(x_peak)
+        peaks_y.append([col]*len(x_peak))
+    peaks=(np.concatenate(peaks_x).astype(int), np.concatenate(peaks_y).astype(int))
+    return peaks
+
+def running_mean(x, N):
+    cumsum = np.cumsum(np.insert(x, 0, 0)) 
+    return (cumsum[N:] - cumsum[:-N]) / float(N)
