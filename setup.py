@@ -11,6 +11,8 @@ dependencies = [
         'scipy',
         'pyvisa',
         'matplotlib',
+        'pyvisa-py',
+        
 ]
 
 setup(
