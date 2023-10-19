@@ -85,15 +85,15 @@ class RigolDS4000(Oscilloscope):
             This function does not return anything.
         """
         lines = (
-            f":WAVEFORM:SOURCE CHAN{channel}",
+            f":WAVEFORM:SOURCE {channel}",
             f":WAVEFORM:FORMAT BYTE",
             f":WAVEFORM:MODE NORM"
         )
 
         self.write_lines(lines)
 
-    def read_data(self, delay:float):
-        return self.instrument.query_binary_values("WAVEFORM:DATA?", delay=delay)
+    def read_data(self, delay:float, channel:int):
+        return self.instrument.query_binary_values(f":WAVEFORM:SOURCE {channel};WAVEFORM:DATA?", delay=delay)
     
     def set_acq_type(self, acq_type:str):
         self.write_SCPI(f":ACQUIRE:TYPE {acq_type}")
