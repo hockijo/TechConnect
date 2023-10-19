@@ -12,6 +12,8 @@ dependencies = [
         'pyvisa',
         'matplotlib',
         'pyvisa-py',
+        'psutil',
+        'zeroconf',
         
 ]
 
