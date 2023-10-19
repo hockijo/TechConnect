@@ -38,7 +38,7 @@ class Oscilloscope(VISAInstrument):
     def manual_channel_setup(self):
         raise NotImplementedError()
 
-    def auto_setup(self):
+    def auto_scale(self):
         raise NotImplementedError()
 
     def single_acquisition(self):
@@ -234,7 +234,7 @@ class Oscilloscope(VISAInstrument):
         tuple
             A tuple containing the acquired x data, y data, time tags, and channel info.
         """
-        self.auto_setup()
+        self.auto_scale()
         time_window = acquisition_time/segment_number
         self.setup_time_window(time_window)
         self.setup_triggering()
@@ -292,7 +292,7 @@ class Oscilloscope(VISAInstrument):
         tuple
             A tuple containing the acquired x_data, y_data, time_tags, and channel_info.
         """
-        self.auto_setup()
+        self.auto_scale()
         self.setup_time_window(time_window)
         self.setup_triggering()
         for channel in channels:
@@ -325,3 +325,59 @@ class Oscilloscope(VISAInstrument):
 
         return x_data, y_data, time_tags, channel_info
 
+    def acquire_single_data(self, channels, acq_type='HRESOLUTION', acq_time_delay=1, force_trigger=True, auto_scale=True, save_directory=None, add_to_md=None):
+        """
+        Performs a single acquisition.
+        """
+        if auto_scale:
+            self.auto_scale()
+            time.sleep(self.query_delay)
+        #TODO: add scale setup
+
+        self.set_acq_type(acq_type)
+        time.sleep(self.query_delay)
+
+        self.single_acquisition()
+        time.sleep(self.query_delay)
+
+        if force_trigger:
+            self.force_trigger()
+            time.sleep(acq_time_delay)
+        #TODO: add triggering setup
+
+        channel_info = {}
+        x_data = {}
+        y_data = {}
+        for channel in channels:
+            self.data_export_setup(channel)
+            time.sleep(self.query_delay)
+
+            channel_channel_info = self.retrieve_channel_info(channel)
+            channel_info.update({channel: channel_channel_info})
+            x_data.update({channel: self.generate_x_data(channel_channel_info)})
+
+            time.sleep(self.query_delay)
+            channel_y_data = self.read_data(delay=1)
+            y_data.update({channel: channel_y_data})
+
+        if save_directory is not None:
+            save_dict = {
+                            'x_data': x_data,
+                            'y_data': y_data,
+                            'channel_info': channel_info
+                        }
+            acquisition_info = {'type': acq_type, 
+                                'acq_time': x_data[channels[0]][-1]-x_data[channels[0]][0],
+            }
+            self.parse_and_save(save_directory, save_dict, acquisition_info, add_to_md=add_to_md)
+
+        return x_data, y_data, channel_info
+        
+    def force_trigger(self):
+        raise NotImplementedError()
+    
+    def set_acq_type(self):
+        raise NotImplementedError()
+    
+    def read_data(self):
+        raise NotImplementedError()
