@@ -43,8 +43,8 @@ class Keysight3000T(Oscilloscope):
         Set up the segmented acquisition mode.
     manual_channel_setup(channel, vertical_scale, vertical_range, vertical_offset, bw_limit, coupling)
         Perform manual setup for a specific channel.
-    auto_setup()
-        Perform automatic setup for the oscilloscope.
+    auto_scale()
+        Perform automatic scale of the oscilloscope.
     single_acquisition()
         Perform a single acquisition.
     digitize_acquisition(channels)
@@ -227,7 +227,7 @@ class Keysight3000T(Oscilloscope):
 
         self.write_lines(lines)
 
-    def auto_setup(self):
+    def auto_scale(self):
         """
         Automatically sets up the instrument by sending the SCPI command ":AUTOSCALE".
         """
