@@ -96,7 +96,7 @@ class RigolDS4000(Oscilloscope):
         self.write_SCPI(f":WAVEFORM:SOURCE {channel};WAVEFORM:DATA?")
         time.sleep(delay)
         raw = self.instrument.read_raw()
-        return [x for x in raw]
+        return np.asarray([x for x in raw])
     
     def set_acq_type(self, acq_type:str):
         self.write_SCPI(f":ACQUIRE:TYPE {acq_type}")
