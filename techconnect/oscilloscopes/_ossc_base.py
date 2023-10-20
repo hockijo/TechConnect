@@ -357,7 +357,7 @@ class Oscilloscope(VISAInstrument):
             x_data.update({channel: self.generate_x_data(channel_channel_info)})
 
             time.sleep(self.query_delay)
-            channel_y_data = self.read_data(delay=1, channel=channel)
+            channel_y_data = self.scale_y_data(self.read_data(delay=1, channel=channel), channel_channel_info)
             y_data.update({channel: channel_y_data})
 
         if save_directory is not None:
