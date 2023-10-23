@@ -45,11 +45,11 @@ class RigolDS4000(Oscilloscope):
             'points': int(float(channel_info[2])),
             'count': int(channel_info[3]),
             'xincrement': float(channel_info[4]),
-            'xorigin': float(channel_info[5]),
-            'xreference': float(channel_info[6]),
+            'xorigin': float(channel_info[5])*float(channel_info[4]),
+            'xreference': float(channel_info[6])*float(channel_info[4]),
             'yincrement': float(channel_info[7]),
-            'yorigin': float(channel_info[8]),
-            'yreference': float(channel_info[9])
+            'yorigin': float(channel_info[8])*float(channel_info[7]),
+            'yreference': float(channel_info[9])*float(channel_info[7])
         }
     
     def auto_scale(self):
@@ -95,7 +95,7 @@ class RigolDS4000(Oscilloscope):
     def read_data(self, delay:float, channel:int):
         self.write_SCPI(f":WAVEFORM:SOURCE {channel};WAVEFORM:DATA?")
         time.sleep(delay)
-        raw = self.instrument.read_raw()
+        raw = self.instrument.read_raw()[11:-1]
         return np.asarray([x for x in raw])
     
     def set_acq_type(self, acq_type:str):
