@@ -197,12 +197,23 @@ class Oscilloscope(VISAInstrument):
                 'resource_info': self.instrument.resource_info._asdict().copy(),
                 'collection_time_UTC': time.time()
             }
-        metadata['resource_info'].update({'manufactuer_id': self.instrument.manufacturer_id,
-                                            'manufactuer_name': self.instrument.manufacturer_name,
-                                            'model_code': self.instrument.model_code,
-                                            'model_name': self.instrument.model_name,
-                                            'serial_number': self.instrument.serial_number,
-                                            'idn': self.query_SCPI(u"*IDN?")})
+        try:
+            from pyvisa.resources.tcpip import TCPIPInstrument
+            from pyvisa.resources.usb import USBInstrument
+            if isinstance(self.instrument, USBInstrument):
+                metadata['resource_info'].update({'manufactuer_id': self.instrument.manufacturer_id,
+                                                    'manufactuer_name': self.instrument.manufacturer_name,
+                                                    'model_code': self.instrument.model_code,
+                                                    'model_name': self.instrument.model_name,
+                                                    'serial_number': self.instrument.serial_number,
+                                                    'idn': self.query_SCPI(u"*IDN?"),
+                                                    'attribute_error': False})
+                
+            elif isinstance(self.instrument, TCPIPInstrument):
+                metadata['resource_info'].update({'idn': self.query_SCPI(u"*IDN?"), 'attribute_error': False})
+        except AttributeError:
+            metadata['resource_info'].update({'idn': self.query_SCPI(u"*IDN?"), 'attribute_error': True})
+
         if acquisition_info is not None:
             metadata.update({'acquisition_info': acquisition_info})
         if add_to_md is not None:
