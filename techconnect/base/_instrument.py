@@ -40,9 +40,10 @@ class VISAInstrument():
     check_error()
         checks for and returns errors
     """
-    def __init__(self):
+    def __init__(self, instrument_type: str):
         self.query_delay = 0.1
         self.rm = pyvisa.ResourceManager()
+        self.instrument_type = instrument_type
 
     def connect(self, address):
         """

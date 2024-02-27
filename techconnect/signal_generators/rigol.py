@@ -36,7 +36,7 @@ class DG1000(VISAInstrument):
     """
 
     def __init__(self):
-        super().__init__()
+        super().__init__(instrument_type="Rigol DG1000")
         self.query_delay = 1
 
     def query_apply(self, channel):
@@ -204,7 +204,7 @@ class DG4000(VISAInstrument):
     """
 
     def __init__(self):
-        super().__init__()
+        super().__init__(instrument_type="Rigol DG4000")
         self.query_delay = 0.1
 
     def query_apply(self):

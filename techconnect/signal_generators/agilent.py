@@ -38,7 +38,7 @@ class Agilent33250A(PrologixInstrument):
         Set up the signal generator to produce a user-defined function waveform.
     """
     def __init__(self, gpib_address):
-        super().__init__()
+        super().__init__(instrument_type="Agilent 33250A")
         self.query_delay = 0.1
         self.gpib_address = gpib_address
 

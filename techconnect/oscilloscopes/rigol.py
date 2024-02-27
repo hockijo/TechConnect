@@ -20,7 +20,7 @@ class RigolDS4000(Oscilloscope):
     """
 
     def __init__(self):
-        super().__init__()
+        super().__init__(instrument_type="DS4000")
         self.query_delay = 0.5
 
     def get_acq_type(self):

@@ -74,7 +74,7 @@ class Keysight3000T(Oscilloscope):
     """
 
     def __init__(self):
-        super().__init__()
+        super().__init__(instrument_type='Keysight3000T')
         self.query_delay = 0.1
 
     def segmented_initialization(self, channel):

@@ -3,7 +3,7 @@ from base._instrument import VISAInstrument, PrologixInstrument
 
 class Agilent89410A(PrologixInstrument):
     def __init__(self):
-        super().__init__()
+        super().__init__(instrument_type="Agilent 89410A")
         self.query_delay = 0.1
         self.instrument_type = "Agilent89410A Spectrum Analyser"
         self.initialise_device()
